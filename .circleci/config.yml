@@ -5,8 +5,9 @@ orbs:
 
 jobs:
   build:
-    executor: android/android-machine
-    resource-class: large
+    executor:
+      name: android/android-machine
+      resource-class: large
     steps:
       - checkout
       - android/restore-gradle-cache

@@ -7,16 +7,16 @@ jobs:
   build:
     executor: android/android-machine
     resource-class: large
-  steps:
-    - checkout
-    - android/restore-gradle-cache
-    - android/restore-build-cache
-    - run:
-        name: Run build
-        command: |
-          ./gradlew assemble
-    - android/save-gradle-cache
-    - android/save-build-cache
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Run build
+          command: |
+            ./gradlew assemble
+      - android/save-gradle-cache
+      - android/save-build-cache
 
 workflows:
   build-orb:

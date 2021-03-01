@@ -47,6 +47,7 @@ class TaskDetailFragment : Fragment() {
         TaskDetailViewModelFactory((requireContext().applicationContext as TodoApplication).taskRepository)
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupFab()

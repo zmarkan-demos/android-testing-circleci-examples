@@ -50,6 +50,7 @@ class StatisticsFragment : Fragment() {
         return viewDataBinding.root
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewDataBinding.viewmodel = viewModel

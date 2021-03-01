@@ -44,24 +44,24 @@ class TasksActivity : AppCompatActivity() {
 
         val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
-            AppBarConfiguration.Builder(R.id.tasks_fragment_dest, R.id.statistics_fragment_dest)
-                .setDrawerLayout(drawerLayout)
-                .build()
+                AppBarConfiguration.Builder(R.id.tasks_fragment_dest, R.id.statistics_fragment_dest)
+                        .setOpenableLayout(drawerLayout)
+                        .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
         findViewById<NavigationView>(R.id.nav_view)
-            .setupWithNavController(navController)
+                .setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment).navigateUp(appBarConfiguration)
-            || super.onSupportNavigateUp()
+                || super.onSupportNavigateUp()
     }
 
     private fun setupNavigationDrawer() {
         drawerLayout = (findViewById<DrawerLayout>(R.id.drawer_layout))
-            .apply {
-                setStatusBarBackground(R.color.colorPrimaryDark)
-            }
+                .apply {
+                    setStatusBarBackground(R.color.colorPrimaryDark)
+                }
     }
 }
 

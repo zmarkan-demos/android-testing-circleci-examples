@@ -21,11 +21,7 @@ android {
         }
     }
     buildFeatures {
-        dataBinding {
-            enabled = true
-            enabledForTests = true
-
-        }
+        dataBinding = true
     }
 
 //    dataBinding {
@@ -44,6 +40,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    lintOptions{
+        abortOnError false
     }
 }
 

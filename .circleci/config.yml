@@ -32,8 +32,8 @@ jobs:
           name: Run unit tests
           command: |
             ./gradlew testDebugUnitTest
-      - android/restore-gradle-cache
-      - android/restore-build-cache
+      - android/save-gradle-cache
+      - android/save-build-cache
       - run:
           name: Save test results
           command: |
@@ -64,8 +64,8 @@ jobs:
           name: Run connected tests
           command: |
             ./gradlew connectedDebugAndroidTest
-      - android/restore-gradle-cache
-      - android/restore-build-cache
+      - android/save-gradle-cache
+      - android/save-build-cache
       - run:
           name: Save test results
           command: |
@@ -96,8 +96,8 @@ jobs:
           name: Run connected tests
           command: |
             ./gradlew connectedDebugAndroidTest
-      - android/restore-gradle-cache
-      - android/restore-build-cache
+      - android/save-gradle-cache
+      - android/save-build-cache
       - run:
           name: Save test results
           command: |
@@ -128,8 +128,8 @@ jobs:
           name: Run connected tests
           command: |
             ./gradlew connectedDebugAndroidTest
-      - android/restore-gradle-cache
-      - android/restore-build-cache
+      - android/save-gradle-cache
+      - android/save-build-cache
       - run:
           name: Save test results
           command: |

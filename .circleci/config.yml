@@ -20,6 +20,10 @@ jobs:
             ./gradlew assemble
       - android/save-gradle-cache
       - android/save-build-cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./app/build
 
   unit_test:
     executor:
@@ -29,6 +33,8 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
+      - attach_workspace:
+          at: .
       - run:
           name: Run unit tests
           command: |
@@ -54,6 +60,8 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
+      - attach_workspace:
+          at: .
       - android/create-avd:
           avd-name: android-29-play
           install: true
@@ -86,6 +94,8 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
+      - attach_workspace:
+            at: .
       - android/create-avd:
           avd-name: android-29-play
           install: true
@@ -118,6 +128,8 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
+      - attach_workspace:
+          at: .
       - android/create-avd:
           avd-name: android-29-play
           install: true
@@ -154,9 +166,9 @@ workflows:
       - unit_test:
           requires:
             - build
-      - android_test_large:
-          requires:
-            - build
+#      - android_test_large:
+#          requires:
+#            - build
       - android_test_xlarge:
           requires:
             - build

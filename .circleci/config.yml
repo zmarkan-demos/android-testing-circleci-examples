@@ -19,14 +19,33 @@ jobs:
       - android/save-gradle-cache
       - android/save-build-cache
 
+  unit_test:
+    executor:
+      name: android/android-machine
+      resource-class: large
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Run unit tests
+          command: |
+            ./gradlew testDebugUnitTest
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+
 workflows:
-  build-orb:
-    jobs:
-      - android/build
+#  build-orb: # doesn't really build just accepts licenses
+#    jobs:
+#      - android/build
+#
 
   build-mine:
     jobs:
       - build
+      - unit_test:
+          requires:
+            - build
 
 #  build_and_setup:
 #    docker:

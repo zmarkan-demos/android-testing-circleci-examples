@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Run build
           command: |
-            ./gradlew assemble
+            ./gradlew assemble assembleDebugAndroidTest
       - android/save-gradle-cache
       - android/save-build-cache
       - persist_to_workspace:

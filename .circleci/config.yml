@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Run build
           command: |
-            ./gradlew assemble assembleAndroidTest
+            ./gradlew assemble
       - android/save-gradle-cache
       - android/save-build-cache
 
@@ -142,38 +142,6 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
-  android_test_xxlarge_no_assembleDebugAndroidTest:
-    executor:
-      name: android/android-machine
-      resource-class: 2xlarge
-    steps:
-      - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - android/create-avd:
-          avd-name: android-29-play
-          install: true
-          system-image: system-images;android-29;google_apis;x86
-      - android/start-emulator:
-          avd-name: android-29-play
-          post-emulator-launch-assemble-command: ""
-      - android/wait-for-emulator
-      - run:
-          name: Run connected tests
-          command: |
-            ./gradlew connectedDebugAndroidTest
-      - android/save-gradle-cache
-      - android/save-build-cache
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/junit
 workflows:
 #  build-orb: # doesn't really build just accepts licenses
 #    jobs:
@@ -193,9 +161,6 @@ workflows:
           requires:
             - build
       - android_test_xxlarge:
-          requires:
-            - build
-      - android_test_xxlarge_no_assembleDebugAndroidTest:
           requires:
             - build
 

@@ -40,10 +40,138 @@ jobs:
               mkdir -p ~/test-results/junit/
               find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
           when: always
-            - store_test_results:
-                path: ~/test-results
-            - store_artifacts:
-                path: ~/test-results/junit
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+  android_test_medium:
+    executor:
+      name: android/android-machine
+      resource-class: medium
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - android/create-avd:
+          avd-name: android-29-play
+          install: true
+          system-image: system-images;android-29;google_apis;x86
+      - android/start-emulator:
+          avd-name: android-29-play
+      - android/wait-for-emulator
+      - run:
+          name: Run unit tests
+          command: |
+            ./gradlew connectedDebugAndroidTest
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+  android_test_large:
+    executor:
+      name: android/android-machine
+      resource-class: large
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - android/create-avd:
+          avd-name: android-29-play
+          install: true
+          system-image: system-images;android-29;google_apis;x86
+      - android/start-emulator:
+          avd-name: android-29-play
+      - android/wait-for-emulator
+      - run:
+          name: Run unit tests
+          command: |
+            ./gradlew connectedDebugAndroidTest
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+  android_test_xlarge:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - android/create-avd:
+          avd-name: android-29-play
+          install: true
+          system-image: system-images;android-29;google_apis;x86
+      - android/start-emulator:
+          avd-name: android-29-play
+      - android/wait-for-emulator
+      - run:
+          name: Run unit tests
+          command: |
+            ./gradlew connectedDebugAndroidTest
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+  android_test_xxlarge:
+    executor:
+      name: android/android-machine
+      resource-class: 2xlarge
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - android/create-avd:
+          avd-name: android-29-play
+          install: true
+          system-image: system-images;android-29;google_apis;x86
+      - android/start-emulator:
+          avd-name: android-29-play
+      - android/wait-for-emulator
+      - run:
+          name: Run unit tests
+          command: |
+            ./gradlew connectedDebugAndroidTest
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
 
 workflows:
 #  build-orb: # doesn't really build just accepts licenses
@@ -55,6 +183,18 @@ workflows:
     jobs:
       - build
       - unit_test:
+          requires:
+            - build
+      - android_test_medium:
+          requires:
+            - build
+      - android_test_large:
+          requires:
+            - build
+      - android_test_xlarge:
+          requires:
+            - build
+      - android_test_xxlarge:
           requires:
             - build
 

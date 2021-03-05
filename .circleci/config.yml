@@ -194,6 +194,9 @@ workflows:
       - android_test_xxlarge:
           requires:
             - build
+      - android_test_xxlarge_no_assembleDebugAndroidTest:
+          requires:
+            - build
 
 #  build_and_setup:
 #    docker:

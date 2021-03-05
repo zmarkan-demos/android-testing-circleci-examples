@@ -45,38 +45,6 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
-  android_test_medium:
-    executor:
-      name: android/android-machine
-      resource-class: medium
-    steps:
-      - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - android/create-avd:
-          avd-name: android-29-play
-          install: true
-          system-image: system-images;android-29;google_apis;x86
-      - android/start-emulator:
-          avd-name: android-29-play
-      - android/wait-for-emulator
-      - run:
-          name: Run unit tests
-          command: |
-            ./gradlew connectedDebugAndroidTest
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/junit
-
   android_test_large:
     executor:
       name: android/android-machine
@@ -93,7 +61,7 @@ jobs:
           avd-name: android-29-play
       - android/wait-for-emulator
       - run:
-          name: Run unit tests
+          name: Run connected tests
           command: |
             ./gradlew connectedDebugAndroidTest
       - android/restore-gradle-cache
@@ -125,7 +93,7 @@ jobs:
           avd-name: android-29-play
       - android/wait-for-emulator
       - run:
-          name: Run unit tests
+          name: Run connected tests
           command: |
             ./gradlew connectedDebugAndroidTest
       - android/restore-gradle-cache
@@ -157,7 +125,7 @@ jobs:
           avd-name: android-29-play
       - android/wait-for-emulator
       - run:
-          name: Run unit tests
+          name: Run connected tests
           command: |
             ./gradlew connectedDebugAndroidTest
       - android/restore-gradle-cache

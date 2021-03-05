@@ -13,7 +13,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -23,11 +32,6 @@ android {
     buildFeatures {
         dataBinding = true
     }
-
-//    dataBinding {
-//        enabled = true
-//        enabledForTests = true
-//    }
 
     // Always show the result of every unit test when running via command line, even if it passes.
     testOptions.unitTests {
@@ -105,4 +109,7 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+
+    androidTestUtil "androidx.test:orchestrator:$androidXTestCoreVersion"
+
 }

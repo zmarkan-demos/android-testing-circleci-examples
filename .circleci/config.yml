@@ -92,10 +92,6 @@ jobs:
       resource-class: xlarge
     steps:
       - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - attach_workspace:
-            at: .
       - android/create-avd:
           avd-name: android-29-play
           install: true
@@ -104,6 +100,11 @@ jobs:
           avd-name: android-29-play
           post-emulator-launch-assemble-command: ""
           restore-gradle-cache-post-emulator-launch: false
+          wait-for-emulator: false
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - attach_workspace:
+            at: .
       - android/wait-for-emulator
       - run:
           name: Run connected tests

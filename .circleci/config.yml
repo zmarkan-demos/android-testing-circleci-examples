@@ -7,8 +7,9 @@ orbs:
 jobs:
   build:
     executor:
+      # We run the build on 2xlarge because there's significant perf gains vs large/xlarge
       name: android/android-machine
-      resource-class: large
+      resource-class: 2xlarge
     steps:
       - checkout
       - android/restore-gradle-cache

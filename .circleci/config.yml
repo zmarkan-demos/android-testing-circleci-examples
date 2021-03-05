@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   android: circleci/android@1.0.2
 
+
 jobs:
   build:
     executor:
@@ -33,6 +34,16 @@ jobs:
             ./gradlew testDebugUnitTest
       - android/restore-gradle-cache
       - android/restore-build-cache
+      - run:
+          name: Save test results
+          command: |
+              mkdir -p ~/test-results/junit/
+              find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+            - store_test_results:
+                path: ~/test-results
+            - store_artifacts:
+                path: ~/test-results/junit
 
 workflows:
 #  build-orb: # doesn't really build just accepts licenses

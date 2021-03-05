@@ -153,9 +153,6 @@ workflows:
       - unit_test:
           requires:
             - build
-      - android_test_medium:
-          requires:
-            - build
       - android_test_large:
           requires:
             - build

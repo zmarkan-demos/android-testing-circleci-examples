@@ -159,6 +159,20 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+  just_workspacing:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - attach_workspace:
+          at: .
+      - run:
+          command: |
+            echo "Hello"
+
 workflows:
 #  build-orb: # doesn't really build just accepts licenses
 #    jobs:
@@ -178,6 +192,9 @@ workflows:
           requires:
             - build
       - android_test_xxlarge:
+          requires:
+            - build
+      - just_workspacing:
           requires:
             - build
 

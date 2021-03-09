@@ -3,42 +3,17 @@ version: 2.1
 orbs:
   android: circleci/android@1.0.2
 
-
 jobs:
-  build:
+  unit-test:
     executor:
-      # We run the build on 2xlarge because there's significant perf gains vs large/xlarge
       name: android/android-machine
-      resource-class: 2xlarge
+      resource-class: xlarge
     steps:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
-      - run:
-          name: Run build
-          command: |
-            ./gradlew assemble assembleDebugAndroidTest
-      - android/save-gradle-cache
-      - android/save-build-cache
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./app/build
-
-  unit_test:
-    executor:
-      name: android/android-machine
-      resource-class: large
-    steps:
-      - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - attach_workspace:
-          at: .
-      - run:
-          name: Run unit tests
-          command: |
-            ./gradlew testDebugUnitTest
+      - android/run-tests:
+          test-command: ./gradlew connectedDebugTest
       - android/save-gradle-cache
       - android/save-build-cache
       - run:
@@ -52,66 +27,19 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
-  android_test_large:
-    executor:
-      name: android/android-machine
-      resource-class: large
-    steps:
-      - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - attach_workspace:
-          at: .
-      - android/create-avd:
-          avd-name: android-29-play
-          install: true
-          system-image: system-images;android-29;google_apis;x86
-      - android/start-emulator:
-          avd-name: android-29-play
-      - android/wait-for-emulator
-      - run:
-          name: Run connected tests
-          command: |
-            ./gradlew connectedDebugAndroidTest
-      - android/save-gradle-cache
-      - android/save-build-cache
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/junit
-
-  android_test_xlarge:
+  android-test:
+    parameters:
+      system-image:
+        type: string
+        default: system-images;android-30;google_apis;x86
     executor:
       name: android/android-machine
       resource-class: xlarge
     steps:
       - checkout
-      - android/create-avd:
-          avd-name: android-29-play
-          install: true
-          system-image: system-images;android-29;google_apis;x86
-      - android/start-emulator:
-          avd-name: android-29-play
-          post-emulator-launch-assemble-command: ""
-          restore-gradle-cache-post-emulator-launch: false
-          wait-for-emulator: false
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - attach_workspace:
-            at: .
-      - android/wait-for-emulator
-      - run:
-          name: Run connected tests
-          command: |
-            ./gradlew connectedDebugAndroidTest
-      - android/save-gradle-cache
-      - android/save-build-cache
+      - android/start-emulator-and-run-tests:
+          test-command: ./gradlew connectedDebugAndroidTest
+          system-image: << parameters.system-image >>
       - run:
           name: Save test results
           command: |
@@ -123,43 +51,7 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
-  android_test_xxlarge:
-    executor:
-      name: android/android-machine
-      resource-class: 2xlarge
-    steps:
-      - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
-      - attach_workspace:
-          at: .
-      - android/create-avd:
-          avd-name: android-29-play
-          install: true
-          system-image: system-images;android-29;google_apis;x86
-      - android/start-emulator:
-          avd-name: android-29-play
-          post-emulator-launch-assemble-command: ""
-          restore-gradle-cache-post-emulator-launch: false
-      - android/wait-for-emulator
-      - run:
-          name: Run connected tests
-          command: |
-            ./gradlew connectedDebugAndroidTest
-      - android/save-gradle-cache
-      - android/save-build-cache
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/junit
-
-  just_workspacing:
+  release-build:
     executor:
       name: android/android-machine
       resource-class: xlarge
@@ -167,109 +59,41 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
-      - attach_workspace:
-          at: .
       - run:
+          name: Assemble release build
           command: |
-            echo "Hello"
+            ./gradlew assembleRelease
+      - store_artifacts:
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
 
 workflows:
-#  build-orb: # doesn't really build just accepts licenses
-#    jobs:
-#      - android/build
-#
-
-  build-mine:
+  test-and-build:
     jobs:
-      - build
-      - unit_test:
-          requires:
-            - build
-#      - android_test_large:
-#          requires:
-#            - build
-      - android_test_xlarge:
-          requires:
-            - build
-      - android_test_xxlarge:
-          requires:
-            - build
-      - just_workspacing:
-          requires:
-            - build
+      - unit-test
+      - android-test:
+          filters:
+            branches:
+              ignore: main # regular commits
+      - android-test:
+          matrix:
+            alias: android-test-all
+            parameters:
+              system-image:
+                - system-images;android-30;google_apis;x86
+                - system-images;android-29;google_apis;x86
+                - system-images;android-28;google_apis;x86
+                - system-images;android-27;google_apis;x86
+                - system-images;android-26;google_apis;x86
+                - system-images;android-25;google_apis;x86
+                - system-images;android-24;google_apis;x86
+                - system-images;android-23;google_apis;x86
+          name: android-test-<<matrix.system-image>>
+          filters:
+            branches:
+              only: main # Commits to main branch
 
-#  build_and_setup:
-#    docker:
-#    - image: circleci/android:api-28
-#    working_directory: ~/project
-#    environment:
-#    - JAVA_TOOL_OPTIONS: "-Xmx1024m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-#    - GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dkotlin.incremental=false"
-#    - TERM: dumb
-#    steps:
-#    - checkout
-#    - run:
-#        name: Build test and lint
-#        command: |
-#          ./gradlew assembleMockDebug assembleProdDebug assembleMockDebugAndroidTest testMockDebug testProdDebug lintMockDebug lintProdDebug
-#    - run:
-#        name: Save test results
-#        command: |
-#          mkdir -p ~/junit/
-#          find . -type f -regex "./.*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
-#        when: always
-#    - store_test_results:
-#        path: ~/junit
-#    - store_artifacts:
-#        path: ~/junit
-#        destination: tests
-#    - store_artifacts:
-#        path: ./app/build/reports
-#        destination: reports/
-#    - persist_to_workspace:
-#        root: .
-#        paths:
-#        - ./app/build
-#  run_ftl:
-#    docker:
-#    - image: circleci/android:api-28
-#    working_directory: ~/project
-#    environment:
-#    - JAVA_TOOL_OPTIONS: -Xmx1024m
-#    - GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dkotlin.incremental=false
-#    - TERM: dumb
-#    steps:
-#    - attach_workspace:
-#        at: .
-#    - run:
-#        name: Authorize gcloud and set config defaults
-#        command: |
-#          echo $GCLOUD_SERVICE_KEY | base64 -di > ${HOME}/gcloud-service-key.json
-#          sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-#          sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-#    - run:
-#        name: Test with Firebase Test Lab
-#        command: |
-#          BUILD_DIR=build_${CIRCLE_BUILD_NUM}
-#          sudo gcloud firebase test android run \
-#            --app app/build/outputs/apk/mock/debug/app-mock-debug.apk \
-#            --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk \
-#            --results-bucket cloud-test-${GOOGLE_PROJECT_ID}-testingcodelab \
-#            --results-dir=${BUILD_DIR}
-#    - run:
-#        name: Download results
-#        command: |
-#          BUILD_DIR=build_${CIRCLE_BUILD_NUM}
-#          sudo pip install -U crcmod
-#          mkdir firebase_test_results
-#          sudo gsutil -m mv -r -U `sudo gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID}-testingcodelab/${BUILD_DIR} | tail -1` firebase_test_results/ | true
-#    - store_artifacts:
-#        path: firebase_test_results
-#workflows:
-#  version: 2
-#  build_and_test:
-#    jobs:
-#    - build_and_setup
-#    - run_ftl:
-#        requires:
-#        - build_and_setup
+      - release-build:
+          requires:
+            - unit-test
+            - android-test-all
+

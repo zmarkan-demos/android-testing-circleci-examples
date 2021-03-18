@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@1.0.2
+  android: circleci/android@1.0.3
 
 jobs:
   unit-test:
@@ -40,7 +40,6 @@ jobs:
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
           system-image: << parameters.system-image >>
-          delay-adb: false
       - run:
           name: Save test results
           command: |

@@ -70,7 +70,7 @@ workflows:
   test-and-build:
     jobs:
       - unit-test
-      - android-test:
+      - android/run-ui-tests:
           filters:
             branches:
               ignore: main # regular commits

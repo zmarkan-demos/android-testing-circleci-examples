@@ -5,23 +5,17 @@ plugins {
 
 android {
     compileSdkVersion 30
-
     defaultConfig {
         minSdkVersion 29
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
+
+//        consumerProguardFiles "consumer-rules.pro"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -30,21 +24,25 @@ android {
         jvmTarget = '1.8'
     }
 
-    targetProjectPath = ":app" // Note that your module name may be different
-    properties["android.experimental.self-instrumenting"] = true
+
+
     buildTypes {
-        // Declare a build type (release) to match the target app's build type
+        // declare a build type (release) to match the target app's build type
         release {
             debuggable = true
+            signingConfig = debug.signingConfig
         }
     }
+
+    targetProjectPath = ":app" // Note that your module name may be different
+    experimentalProperties["android.experimental.self-instrumenting"] = true
 }
 
 androidComponents {
     beforeVariants(selector().all()) {
         // Enable only the release buildType, since we only want to measure
         // release build performance
-        enable = buildType == 'release'
+        enabled = buildType == 'release'
     }
 }
 
@@ -57,4 +55,6 @@ dependencies {
     implementation 'junit:junit:4.13.2'
     implementation 'androidx.test.ext:junit:1.1.2'
     implementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'androidx.benchmark:benchmark-macro-junit4:1.1.0-alpha03'
+
 }

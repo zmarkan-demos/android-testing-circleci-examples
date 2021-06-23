@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.architecture.blueprints.todoapp.tasks
+package com.circleci.samples.todoapp.tasks
 
 import android.content.Context
 import android.os.Bundle
@@ -29,11 +29,11 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.example.android.architecture.blueprints.todoapp.R
-import com.example.android.architecture.blueprints.todoapp.ServiceLocator
-import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.FakeAndroidTestRepository
-import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
+import com.circleci.samples.todoapp.R
+import com.circleci.samples.todoapp.ServiceLocator
+import com.circleci.samples.todoapp.data.Task
+import com.circleci.samples.todoapp.data.source.FakeAndroidTestRepository
+import com.circleci.samples.todoapp.data.source.TasksRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After

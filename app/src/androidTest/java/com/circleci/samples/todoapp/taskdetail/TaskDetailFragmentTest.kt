@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.architecture.blueprints.todoapp.taskdetail
+package com.circleci.samples.todoapp.taskdetail
 
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
@@ -24,11 +24,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.example.android.architecture.blueprints.todoapp.R
-import com.example.android.architecture.blueprints.todoapp.ServiceLocator
-import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.FakeAndroidTestRepository
-import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
+import com.circleci.samples.todoapp.R
+import com.circleci.samples.todoapp.ServiceLocator
+import com.circleci.samples.todoapp.data.Task
+import com.circleci.samples.todoapp.data.source.FakeAndroidTestRepository
+import com.circleci.samples.todoapp.data.source.TasksRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.core.IsNot.not

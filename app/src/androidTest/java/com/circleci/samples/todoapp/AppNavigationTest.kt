@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.architecture.blueprints.todoapp
+package com.circleci.samples.todoapp
 
 import android.app.Activity
 import android.view.Gravity
@@ -34,12 +34,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
-import com.example.android.architecture.blueprints.todoapp.tasks.TasksActivity
-import com.example.android.architecture.blueprints.todoapp.util.DataBindingIdlingResource
-import com.example.android.architecture.blueprints.todoapp.util.EspressoIdlingResource
-import com.example.android.architecture.blueprints.todoapp.util.monitorActivity
+import com.circleci.samples.todoapp.data.Task
+import com.circleci.samples.todoapp.data.source.TasksRepository
+import com.circleci.samples.todoapp.tasks.TasksActivity
+import com.circleci.samples.todoapp.util.DataBindingIdlingResource
+import com.circleci.samples.todoapp.util.EspressoIdlingResource
+import com.circleci.samples.todoapp.util.monitorActivity
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before

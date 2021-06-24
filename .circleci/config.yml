@@ -70,15 +70,14 @@ jobs:
           command: |
             mkdir ~/benchmarks
             adb pull /storage/emulated/0/Android/media/com.circleci.samples.todoapp.macrobenchmark ~/benchmarks
-      - run:
-          name: Process benchmark data
-          command: |
-            cat ~/com.circleci.samples.todoapp.macrobenchmark-benchmarkData.json | \
-            jq '[.benchmarks[] | { mode: .params.mode, minimum: .metrics.startupMs.minimum, median: .metrics.startupMs.median, maximum: .metrics.startupMs.maximum}]' \
-            >> ~/benchmarks-summary.json
-
       - store_artifacts:
           path: ~/benchmarks
+      - run:
+          name: Evaluate benchmark results
+          command: node scripts/eval_startup_benchmarks.js
+            
+            
+
 
   release-build:
     executor:

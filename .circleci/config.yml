@@ -74,10 +74,7 @@ jobs:
           path: ~/benchmarks
       - run:
           name: Evaluate benchmark results
-          command: node scripts/eval_startup_benchmarks.js
-            
-            
-
+          command: node scripts/eval_startup_benchmark_output.js
 
   release-build:
     executor:

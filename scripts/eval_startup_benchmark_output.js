@@ -1,4 +1,4 @@
-const benchmarkData = require('~/benchmarks/com.circleci.samples.todoapp.macrobenchmark/com.circleci.samples.todoapp.macrobenchmark-benchmarkData.json')
+const benchmarkData = require('/home/circleci/benchmarks/com.circleci.samples.todoapp.macrobenchmark/com.circleci.samples.todoapp.macrobenchmark-benchmarkData.json')
 
 const COLD_STARTUP_MEDIAN_THRESHOLD_MILIS = 700
 const WARM_STARTUP_MEDIAN_THRESHOLD_MILIS = 200

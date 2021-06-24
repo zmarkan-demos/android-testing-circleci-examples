@@ -64,6 +64,7 @@ jobs:
           post-emulator-launch-assemble-command: ./gradlew app:assembleRelease macrobenchmark:assemble
           post-emulator-wait-steps:
             - run: ./gradlew app:installRelease macrobenchmark:installRelease
+          kill-emulators: false
       - run:
           name: Pull benchmark data from emulator
           command: |

@@ -70,11 +70,13 @@ jobs:
           command: |
             mkdir ~/benchmarks
             adb pull /storage/emulated/0/Android/media/com.circleci.samples.todoapp.macrobenchmark ~/benchmarks
-      - store_artifacts:
-          path: ~/benchmarks
       - run:
           name: Evaluate benchmark results
           command: node scripts/eval_startup_benchmark_output.js
+      - store_artifacts:
+          path: ~/benchmarks
+          
+      
 
   release-build:
     executor:

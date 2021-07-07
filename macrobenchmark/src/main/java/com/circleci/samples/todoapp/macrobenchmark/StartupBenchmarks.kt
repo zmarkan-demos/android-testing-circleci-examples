@@ -51,7 +51,6 @@ class StartupBenchmarks(private val startupMode: StartupMode) {
         iterations = 5
     ) {
         action = "com.circleci.samples.target.STARTUP_ACTIVITY"
-//        action = "com.example.macrobenchmark.target.TRIVIAL_STARTUP_ACTIVITY"
     }
 
     companion object {

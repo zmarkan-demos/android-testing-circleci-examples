@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   android: circleci/android@1.0.3
+  gcp-cli: circleci/gcp-cli@2.2.0
 
 jobs:
   unit-test:
@@ -76,8 +77,31 @@ jobs:
           name: Evaluate benchmark results
           command: node scripts/eval_startup_benchmark_output.js
      
-          
-      
+  benchmarks-ftl:
+    executor:
+      name: android/android
+      version: 30
+      variant: node
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - ./gradlew app:assembleRelease macrobenchmark:assemble
+      - gcp-cli/initialize:
+          - gcloud-service-key: GCP_SA_KEY
+          - google-project-id: GCP_PROJECT_ID
+      - run:
+          name: run on FTL
+          command: |
+            gcloud firebase test android run \
+              --type instrumentation \
+              --app app/build/outputs/apk/release/app-release.apk \
+              --test macrobenchmark/build/outputs/apk/release/macrobenchmark-release.apk \
+              --device model=flame,version=30,locale=en,orientation=portrait \
+              --directories-to-pull /sdcard/Download \
+              --results-bucket gs://android-sample-benchmarks \
+              --results-dir macrobenchmark \
+              --environment-variables clearPackageData=true,additionalTestOutputDir=/sdcard/Download,no-isolated-storage=true
 
   release-build:
     executor:
@@ -120,11 +144,13 @@ workflows:
             branches:
               only: main # Commits to main branch
       - benchmarks
+      - benchmarks-ftl
       - release-build:
           requires:
             - unit-test
             - android-test-all
             - benchmarks
+            - benchmarks-ftl
           filters:
             branches:
               only: main # Commits to main branch

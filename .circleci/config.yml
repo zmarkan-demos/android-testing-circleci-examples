@@ -93,6 +93,8 @@ jobs:
       - gcp-cli/initialize:
           gcloud-service-key: GCP_SA_KEY
           google-project-id: GCP_PROJECT_ID
+          google-compute-region: europe-west2
+
       - run:
           name: run on FTL
           command: |

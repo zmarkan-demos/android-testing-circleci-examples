@@ -82,7 +82,6 @@ jobs:
       name: android/android
       sdk-version: "30"
       variant: node
-
     steps:
       - checkout
       - android/restore-gradle-cache
@@ -93,7 +92,6 @@ jobs:
       - gcp-cli/initialize:
           gcloud-service-key: GCP_SA_KEY
           google-project-id: GCP_PROJECT_ID
-
       - run:
           name: run on FTL
           command: |
@@ -111,10 +109,9 @@ jobs:
           command: |
             mkdir ~/benchmarks
             gsutil cp -r 'gs://android-sample-benchmarks/macrobenchmark/**/artifacts/sdcard/Download/*'  ~/benchmarks
-
+            gsutil rm -r gs://android-sample-benchmarks/macrobenchmark
       - store_artifacts:
             path: ~/benchmarks
-
 
   release-build:
     executor:

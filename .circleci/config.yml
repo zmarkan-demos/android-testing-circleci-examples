@@ -80,16 +80,19 @@ jobs:
   benchmarks-ftl:
     executor:
       name: android/android
-      version: 30
+      sdk-version: "30"
       variant: node
+
     steps:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
-      - ./gradlew app:assembleRelease macrobenchmark:assemble
+      - run:
+          name: Build app and test app
+          command: ./gradlew app:assembleRelease macrobenchmark:assemble
       - gcp-cli/initialize:
-          - gcloud-service-key: GCP_SA_KEY
-          - google-project-id: GCP_PROJECT_ID
+          gcloud-service-key: GCP_SA_KEY
+          google-project-id: GCP_PROJECT_ID
       - run:
           name: run on FTL
           command: |
@@ -102,6 +105,15 @@ jobs:
               --results-bucket gs://android-sample-benchmarks \
               --results-dir macrobenchmark \
               --environment-variables clearPackageData=true,additionalTestOutputDir=/sdcard/Download,no-isolated-storage=true
+      - run:
+          name: Download benchmark data
+          command: |
+            mkdir ~/benchmarks
+            gsutil cp -r 'gs://android-sample-benchmarks/macrobenchmark/**/artifacts/sdcard/Download/*'  ~/benchmarks
+
+      - store_artifacts:
+            path: ~/benchmarks
+
 
   release-build:
     executor:

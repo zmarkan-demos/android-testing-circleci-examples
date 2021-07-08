@@ -24,7 +24,7 @@ if(warmMetrics.median > WARM_STARTUP_MEDIAN_THRESHOLD_MILIS){
     err = 1
     console.error(`${warmMsg} ❌ - OVER THRESHOLD ${WARM_STARTUP_MEDIAN_THRESHOLD_MILIS}ms`)
 } else {
-    console.log(`${coldMsg} ✅`)
+    console.log(`${warmMsg} ✅`)
 }
 
 if(hotMetrics.median > HOT_STARTUP_MEDIAN_THRESHOLD_MILIS){

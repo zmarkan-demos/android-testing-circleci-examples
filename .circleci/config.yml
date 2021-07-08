@@ -52,7 +52,7 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
-  benchmarks:
+  benchmarks-emulator:
     executor:
       name: android/android-machine
       resource-class: xlarge
@@ -73,9 +73,6 @@ jobs:
             adb pull /storage/emulated/0/Android/media/com.circleci.samples.todoapp.macrobenchmark ~/benchmarks
       - store_artifacts:
           path: ~/benchmarks
-      - run:
-          name: Evaluate benchmark results
-          command: node scripts/eval_startup_benchmark_output.js
      
   benchmarks-ftl:
     executor:
@@ -112,6 +109,9 @@ jobs:
             gsutil rm -r gs://android-sample-benchmarks/macrobenchmark
       - store_artifacts:
             path: ~/benchmarks
+      - run:
+          name: Evaluate benchmark results
+          command: node scripts/eval_startup_benchmark_output.js
 
   release-build:
     executor:
@@ -153,7 +153,7 @@ workflows:
           filters:
             branches:
               only: main # Commits to main branch
-      - benchmarks
+      - benchmarks-emulator
       - benchmarks-ftl
       - release-build:
           requires:

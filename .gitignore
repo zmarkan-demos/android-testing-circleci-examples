@@ -9,3 +9,4 @@ build
 .classpath
 **/*.hprof
 *.json
+benchmarks-outputs/

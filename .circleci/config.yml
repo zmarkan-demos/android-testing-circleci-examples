@@ -31,6 +31,8 @@ jobs:
   runner-test:
     machine: true
     resource_class: zmarkan-demos-namespace/local-mac-runner
+    environment:
+      JAVA_HOME: /Users/zmarkan/libs/jdk-11.0.2.jdk/Contents/Home
     steps:
       - checkout
       - run:

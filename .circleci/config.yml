@@ -96,7 +96,7 @@ jobs:
               --type instrumentation \
               --app app/build/outputs/apk/release/app-release.apk \
               --test macrobenchmark/build/outputs/apk/release/macrobenchmark-release.apk \
-              --device model=flame,version=30,locale=en,orientation=portrait \
+              --device model=redfin,version=30,locale=en,orientation=portrait \
               --directories-to-pull /sdcard/Download \
               --results-bucket gs://android-sample-benchmarks \
               --results-dir macrobenchmark \
